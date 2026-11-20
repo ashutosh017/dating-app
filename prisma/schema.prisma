@@ -1,0 +1,156 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                      String         @id
+  name                    String
+  email                   String         @unique
+  emailVerified           Boolean        @default(false)
+  image                   String?
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+
+  sessions                Session[]
+  accounts                Account[]
+
+  profile                 Profile?
+  sentSwipes              Swipe[]        @relation("SentSwipes")
+  receivedSwipes          Swipe[]        @relation("ReceivedSwipes")
+  matchesInitiated        Match[]        @relation("User1Matches")
+  matchesReceived         Match[]        @relation("User2Matches")
+  messagesSent            Message[]      @relation("SentMessages")
+  notifications           Notification[] @relation("UserNotifications")
+  notificationsTriggered  Notification[] @relation("ActorNotifications")
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Profile {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name              String
+  age               Int
+  gender            String   // "man", "woman", "non-binary", etc.
+  sexualOrientation String   // "straight", "gay", "lesbian", "bisexual", "queer"
+  interestedIn      String[] // ["woman"], ["man"], etc.
+  bio               String?
+  address           String   // e.g. "SoHo, New York"
+  latitude          Float?
+  longitude         Float?
+  education         String?  // e.g. "Columbia University"
+  profession        String?  // e.g. "Brand Designer"
+  company           String?  // e.g. "Studio Coy"
+  photos            String[] // Cloudinary URLs
+  interests         String[] // Tags e.g. ["Vinyl Records", "Matcha", "Film Noir"]
+  verified          Boolean  @default(false)
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Swipe {
+  id        String   @id @default(cuid())
+  swiperId  String
+  swiper    User     @relation("SentSwipes", fields: [swiperId], references: [id], onDelete: Cascade)
+  targetId  String
+  target    User     @relation("ReceivedSwipes", fields: [targetId], references: [id], onDelete: Cascade)
+  type      String   // "LIKE" | "PASS"
+  createdAt DateTime @default(now())
+
+  @@unique([swiperId, targetId])
+  @@index([targetId])
+  @@index([swiperId])
+}
+
+model Match {
+  id        String    @id @default(cuid())
+  user1Id   String
+  user1     User      @relation("User1Matches", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2Id   String
+  user2     User      @relation("User2Matches", fields: [user2Id], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  messages  Message[]
+
+  @@unique([user1Id, user2Id])
+  @@index([user1Id])
+  @@index([user2Id])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  matchId   String
+  match     Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([matchId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  actorId   String
+  actor     User     @relation("ActorNotifications", fields: [actorId], references: [id], onDelete: Cascade)
+  type      String   // "LIKE_RECEIVED" | "MUTUAL_MATCH"
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}

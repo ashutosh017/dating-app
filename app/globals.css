@@ -1,26 +1,132 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Bricolage Grotesque", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-coy: "Bricolage Grotesque", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --color-coy-pink: #FF3D81;
+  --color-coy-pink-strong: #D81E63;
+  --color-coy-pink-soft: #FFE4EF;
+  --color-coy-dark: #15121D;
+  --color-coy-muted: #6D6979;
+  --color-coy-soft: #F6F4FA;
+  --color-coy-line: #ECE9F2;
+  --color-coy-rule: #DDD8E8;
+  --color-coy-yellow: #FFE45C;
+  --color-coy-lilac: #E7E0FF;
+  --color-coy-mint: #CBF4E0;
+  --color-coy-sky: #D7ECFF;
+  --color-coy-peach: #FFE1CF;
+  --color-coy-whatsapp: #25D366;
+  --color-coy-ok: #0E8F48;
+  --color-coy-danger: #D92D3A;
+
+  --shadow-pop-sm: 2px 2px 0 #15121D;
+  --shadow-pop: 3px 3px 0 #15121D;
+  --shadow-pop-lg: 5px 5px 0 #15121D;
+  --shadow-pop-xl: 7px 7px 0 #15121D;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #F6F4FA;
+  --foreground: #15121D;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-coy);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Tactile Neo-Brutalist Pill Buttons */
+.btn-coy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 700;
+  border: 2px solid #15121D;
+  border-radius: 9999px;
+  background-color: #FF3D81;
+  color: #15121D;
+  box-shadow: 3px 3px 0 #15121D;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.15s ease;
+  user-select: none;
+  cursor: pointer;
+}
+
+.btn-coy:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #15121D;
+}
+
+.btn-coy:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #15121D;
+}
+
+.btn-coy:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: 2px 2px 0 #15121D;
+}
+
+/* Modifiers */
+.btn-coy-dark {
+  background-color: #15121D;
+  color: #FFFFFF;
+}
+.btn-coy-dark:hover:not(:disabled) {
+  background-color: #262134;
+}
+
+.btn-coy-white {
+  background-color: #FFFFFF;
+  color: #15121D;
+}
+.btn-coy-white:hover:not(:disabled) {
+  background-color: #F6F4FA;
+}
+
+.btn-coy-yellow {
+  background-color: #FFE45C;
+  color: #15121D;
+}
+
+.btn-coy-mint {
+  background-color: #CBF4E0;
+  color: #0E8F48;
+}
+
+.btn-coy-whatsapp {
+  background-color: #25D366;
+  color: #FFFFFF;
+}
+
+/* Sticker Tag Badges */
+.badge-sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border: 1.5px solid #15121D;
+  box-shadow: 2px 2px 0 #15121D;
+  letter-spacing: 0.02em;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F6F4FA;
+}
+::-webkit-scrollbar-thumb {
+  background: #15121D;
+  border-radius: 9999px;
 }

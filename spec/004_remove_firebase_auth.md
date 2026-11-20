@@ -1,0 +1,1 @@
+remove firebase auth compeletely from the app and use betterauth for google authentication
