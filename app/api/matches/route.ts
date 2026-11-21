@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
         orderBy: { createdAt: "desc" },
       });
 
-      const formattedMatches = matches.map((m) => {
+      const formattedMatches = matches.map((m: any) => {
         const otherUser = m.user1Id === userId ? m.user2 : m.user1;
         const otherProfile = otherUser.profile;
         const lastMsg = m.messages[0];

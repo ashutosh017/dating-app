@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
           }),
         ]);
 
-        swipedUserIds.push(...pastSwipes.map((s) => s.targetId));
+        swipedUserIds.push(...pastSwipes.map((s: { targetId: string }) => s.targetId));
 
         // Automatically match the user's saved orientation preference
         if (
